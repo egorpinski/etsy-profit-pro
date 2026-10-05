@@ -1,9 +1,9 @@
 // Injects on Etsy listing pages to extract price and display floating profit pill
 
 function getPrice() {
-  const priceEl = document.querySelector('[data-buy-box-region="price"] span, .wt-text-title-larger, .wt-text-title-03');
+  const priceEl = document.querySelector('[data-buy-box-region="price"], [data-buy-box-region="price"] span, .wt-text-title-larger, .wt-text-title-03');
   if (!priceEl) return 0;
-  const match = priceEl.innerText.replace(/,/g, '').match(/\$?([0-9]+\.?[0-9]*)/);
+  const match = priceEl.innerText.replace(/,/g, '').match(/([0-9]+(?:\.[0-9]+)?)/);
   return match ? parseFloat(match[1]) : 0;
 }
 
@@ -49,7 +49,7 @@ function injectProfitBadge() {
   `;
 
   badge.addEventListener('click', () => {
-    window.open(`http://localhost:3000/?price=${price}`, '_blank');
+    window.open(`https://etsy-profit-pro.onrender.com/?price=${price}`, '_blank');
   });
 
   document.body.appendChild(badge);
