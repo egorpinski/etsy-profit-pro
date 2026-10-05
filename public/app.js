@@ -5,6 +5,8 @@ let currentCurrency = "$";
 
 const elements = {
   itemPrice: document.getElementById('itemPrice'),
+  itemQuantity: document.getElementById('itemQuantity'),
+  quantityBadge: document.getElementById('quantityBadge'),
   shippingCharge: document.getElementById('shippingCharge'),
   itemCost: document.getElementById('itemCost'),
   shippingCost: document.getElementById('shippingCost'),
@@ -15,6 +17,8 @@ const elements = {
   
   // Displays
   netProfitDisplay: document.getElementById('netProfitDisplay'),
+  perItemSubtext: document.getElementById('perItemSubtext'),
+  perItemLabel: document.getElementById('perItemLabel'),
   marginBadge: document.getElementById('marginBadge'),
   breakEvenDisplay: document.getElementById('breakEvenDisplay'),
   totalFeesDisplay: document.getElementById('totalFeesDisplay'),
@@ -34,8 +38,10 @@ const elements = {
 
   // Accordion fees
   feeListing: document.getElementById('feeListing'),
+  feeListingLabel: document.getElementById('feeListingLabel'),
   feeTransaction: document.getElementById('feeTransaction'),
   feePayment: document.getElementById('feePayment'),
+  feePaymentLabel: document.getElementById('feePaymentLabel'),
   feeOffsiteAds: document.getElementById('feeOffsiteAds'),
   feeSellerCosts: document.getElementById('feeSellerCosts'),
 
@@ -67,13 +73,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Attach event listeners
   const inputList = [
-    elements.itemPrice, elements.shippingCharge, elements.itemCost,
+    elements.itemPrice, elements.itemQuantity, elements.shippingCharge, elements.itemCost,
     elements.shippingCost, elements.offsiteAds, elements.etsyAdsCost,
     elements.countrySelect
   ];
 
   inputList.forEach(input => {
-    input.addEventListener('input', runCalculations);
+    if (input) input.addEventListener('input', runCalculations);
   });
 
   elements.targetMarginSlider.addEventListener('input', updateTargetPrice);
@@ -95,6 +101,7 @@ function updateCurrencySymbols() {
 
 function runCalculations() {
   const itemPrice = parseFloat(elements.itemPrice.value) || 0;
+  const quantity = Math.max(1, parseInt(elements.itemQuantity ? elements.itemQuantity.value : 1, 10) || 1);
   const shippingCharge = parseFloat(elements.shippingCharge.value) || 0;
   const itemCost = parseFloat(elements.itemCost.value) || 0;
   const shippingCost = parseFloat(elements.shippingCost.value) || 0;
@@ -104,11 +111,13 @@ function runCalculations() {
 
   // Update input badges
   elements.itemPriceBadge.innerText = `${currentCurrency}${itemPrice.toFixed(2)}`;
+  if (elements.quantityBadge) elements.quantityBadge.innerText = `${quantity} pcs`;
   elements.shippingChargeBadge.innerText = `${currentCurrency}${shippingCharge.toFixed(2)}`;
   elements.itemCostBadge.innerText = `${currentCurrency}${itemCost.toFixed(2)}`;
   elements.shippingCostBadge.innerText = `${currentCurrency}${shippingCost.toFixed(2)}`;
 
-  const totalRev = itemPrice + shippingCharge;
+  const totalItemRev = itemPrice * quantity;
+  const totalRev = totalItemRev + shippingCharge;
   if (totalRev <= 0) return;
 
   // Rates
@@ -120,8 +129,11 @@ function runCalculations() {
     EU: { pPct: 0.04, pFlat: 0.30, reg: 0.0035 }
   }[country] || { pPct: 0.03, pFlat: 0.25, reg: 0 };
 
-  const listingFee = 0.20;
+  // Etsy Listing Fee: $0.20 per sold quantity
+  const listingFee = 0.20 * quantity;
+  // Transaction Fee: 6.5% of total order (items + shipping)
   const transactionFee = totalRev * 0.065;
+  // Payment Processing Fee: percentage of total + fixed transaction fee charged ONCE per order
   const paymentFee = (totalRev * rates.pPct) + rates.pFlat;
   
   let adsFee = 0;
@@ -130,23 +142,33 @@ function runCalculations() {
   const regFee = totalRev * rates.reg;
 
   const totalEtsyFees = listingFee + transactionFee + paymentFee + adsFee + regFee + etsyAdsCost;
-  const totalSellerCosts = itemCost + shippingCost;
+  const totalItemCost = itemCost * quantity;
+  const totalSellerCosts = totalItemCost + shippingCost;
   const totalExpenses = totalEtsyFees + totalSellerCosts;
   const netProfit = totalRev - totalExpenses;
+  const perItemProfit = netProfit / quantity;
   const marginPct = (netProfit / totalRev) * 100;
   const roiPct = totalSellerCosts > 0 ? (netProfit / totalSellerCosts) * 100 : marginPct;
 
-  // Break-even
+  // Break-even per unit sale price
   const combinedFeeRate = 0.065 + rates.pPct + (offsiteAds === 'optional' ? 0.15 : (offsiteAds === 'mandatory' ? 0.12 : 0)) + rates.reg;
   const fixedDeductions = listingFee + rates.pFlat + etsyAdsCost + totalSellerCosts;
   const breakEvenRev = (1 - combinedFeeRate > 0) ? (fixedDeductions / (1 - combinedFeeRate)) : 0;
-  const breakEvenPrice = Math.max(0, breakEvenRev - shippingCharge);
+  const breakEvenPrice = Math.max(0, (breakEvenRev - shippingCharge) / quantity);
 
   // Update DOM Display
   elements.netProfitDisplay.innerText = `${currentCurrency}${netProfit.toFixed(2)}`;
   elements.netProfitDisplay.className = `text-5xl sm:text-6xl font-black font-mono tracking-tight ${
     netProfit >= 0 ? 'text-emerald-400' : 'text-rose-400'
   }`;
+
+  if (elements.perItemSubtext) {
+    if (quantity > 1) {
+      elements.perItemSubtext.innerText = `${currentCurrency}${perItemProfit.toFixed(2)} per item • ${quantity} items in order`;
+    } else {
+      elements.perItemSubtext.innerText = `${currentCurrency}${netProfit.toFixed(2)} per item • 1 item sold`;
+    }
+  }
 
   elements.marginBadge.innerText = `${marginPct.toFixed(1)}% Margin`;
   elements.marginBadge.className = `px-3 py-1 rounded-full text-xs font-bold border ${
@@ -160,8 +182,14 @@ function runCalculations() {
   elements.takeRateBadge.innerText = `Etsy Take Rate: ${((totalEtsyFees / totalRev) * 100).toFixed(1)}%`;
 
   // Itemized List
+  if (elements.feeListingLabel) {
+    elements.feeListingLabel.innerText = `Listing Fee ($0.20 × ${quantity} unit${quantity > 1 ? 's' : ''})`;
+  }
   elements.feeListing.innerText = `${currentCurrency}${listingFee.toFixed(2)}`;
   elements.feeTransaction.innerText = `${currentCurrency}${transactionFee.toFixed(2)}`;
+  if (elements.feePaymentLabel) {
+    elements.feePaymentLabel.innerText = `Payment Processing (${(rates.pPct * 100).toFixed(0)}% + ${currentCurrency}${rates.pFlat.toFixed(2)} per order)`;
+  }
   elements.feePayment.innerText = `${currentCurrency}${paymentFee.toFixed(2)}`;
   elements.feeOffsiteAds.innerText = `${currentCurrency}${adsFee.toFixed(2)}`;
   elements.feeSellerCosts.innerText = `${currentCurrency}${totalSellerCosts.toFixed(2)}`;
@@ -191,6 +219,7 @@ function updateTargetPrice() {
   elements.targetMarginLabel.innerText = `${targetPct}%`;
   elements.sliderMarginText.innerText = `${targetPct}%`;
 
+  const quantity = Math.max(1, parseInt(elements.itemQuantity ? elements.itemQuantity.value : 1, 10) || 1);
   const itemCost = parseFloat(elements.itemCost.value) || 0;
   const shippingCost = parseFloat(elements.shippingCost.value) || 0;
   const shippingCharge = parseFloat(elements.shippingCharge.value) || 0;
@@ -209,7 +238,9 @@ function updateTargetPrice() {
   const adsPct = offsiteAds === 'optional' ? 0.15 : (offsiteAds === 'mandatory' ? 0.12 : 0);
   const combinedFeeRate = 0.065 + rates.pPct + adsPct + rates.reg;
   const targetMarginRate = targetPct / 100;
-  const fixedDeductions = 0.20 + rates.pFlat + etsyAdsCost + itemCost + shippingCost;
+  const listingFee = 0.20 * quantity;
+  const totalItemCost = itemCost * quantity;
+  const fixedDeductions = listingFee + rates.pFlat + etsyAdsCost + totalItemCost + shippingCost;
 
   const denom = 1 - combinedFeeRate - targetMarginRate;
   if (denom <= 0) {
@@ -218,7 +249,7 @@ function updateTargetPrice() {
   }
 
   const targetRev = fixedDeductions / denom;
-  const recPrice = Math.max(0, targetRev - shippingCharge);
+  const recPrice = Math.max(0, (targetRev - shippingCharge) / quantity);
   elements.recommendedPriceDisplay.innerText = `${currentCurrency}${recPrice.toFixed(2)}`;
 }
 

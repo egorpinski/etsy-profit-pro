@@ -140,11 +140,11 @@
 
         <form id="calcForm" class="space-y-5" onsubmit="event.preventDefault();">
           
-          <!-- Pricing Block -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Pricing Block with Quantity -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
               <div class="flex justify-between items-center mb-1.5">
-                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Item Sale Price</label>
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Item Price</label>
                 <span class="text-xs font-mono text-etsy-400" id="itemPriceBadge">$32.00</span>
               </div>
               <div class="relative">
@@ -155,7 +155,18 @@
 
             <div>
               <div class="flex justify-between items-center mb-1.5">
-                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Buyer Shipping Fee</label>
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Quantity</label>
+                <span class="text-xs font-mono text-amber-400" id="quantityBadge">1 pcs</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-2.5 text-slate-400 text-xs">📦</span>
+                <input type="number" id="itemQuantity" value="1" step="1" min="1" max="1000" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-etsy-500 transition">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Buyer Shipping</label>
                 <span class="text-xs font-mono text-slate-400" id="shippingChargeBadge">$0.00</span>
               </div>
               <div class="relative">
@@ -244,13 +255,16 @@
             </span>
           </div>
 
-          <div class="flex items-baseline space-x-3 mb-6">
+          <div class="flex items-baseline space-x-3 mb-1">
             <div class="text-5xl sm:text-6xl font-black text-emerald-400 font-mono tracking-tight" id="netProfitDisplay">
               $14.65
             </div>
-            <div class="text-sm font-semibold text-slate-400">
-              / item sold
+            <div class="text-sm font-semibold text-slate-400" id="perItemLabel">
+              total profit
             </div>
+          </div>
+          <div id="perItemSubtext" class="text-xs font-mono text-emerald-400/90 mb-5">
+            $14.65 per item • 1 item sold
           </div>
 
           <!-- Revenue vs Costs Breakdown Bar -->
@@ -296,7 +310,7 @@
 
           <div class="space-y-2 text-xs">
             <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
-              <span>Listing Fee (Per unit)</span>
+              <span id="feeListingLabel">Listing Fee ($0.20 per unit)</span>
               <span class="font-mono font-semibold" id="feeListing">$0.20</span>
             </div>
             <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
@@ -304,7 +318,7 @@
               <span class="font-mono font-semibold" id="feeTransaction">$2.08</span>
             </div>
             <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
-              <span>Payment Processing Fee (3% + $0.25)</span>
+              <span id="feePaymentLabel">Payment Processing (3% + $0.25 order flat fee)</span>
               <span class="font-mono font-semibold" id="feePayment">$1.21</span>
             </div>
             <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
