@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Etsy Fee & Profit Calculator 2026 — Exact Margins, Fees & Break-Even</title>
+  <meta name="description" content="Free Etsy Fee and Profit Calculator updated for 2026. Calculate transaction fees (6.5%), payment processing (3%+25¢), offsite ads, and break-even pricing.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            etsy: {
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glow-orange {
+      box-shadow: 0 0 45px -10px rgba(249, 115, 22, 0.25);
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 selection:bg-etsy-500 selection:text-white">
+
+  <!-- Navbar -->
+  <header class="border-b border-slate-800/80 bg-slate-950/80 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-etsy-600 to-orange-400 flex items-center justify-center shadow-lg shadow-etsy-500/20 font-black text-white text-xl">
+          🛍️
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            EtsyProfit<span class="text-etsy-500">.pro</span>
+          </span>
+          <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-etsy-500/10 text-etsy-400 border border-etsy-500/20">
+            2026 Fee Schedule
+          </span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center space-x-6 text-sm font-medium text-slate-300">
+        <a href="#calculator" class="hover:text-white transition">Calculator</a>
+        <a href="#target-pricing" class="hover:text-white transition">Target Pricing</a>
+        <a href="#extension" class="hover:text-white transition">Chrome Extension</a>
+        <a href="#pricing" class="hover:text-white transition">Pricing</a>
+      </nav>
+
+      <div class="flex items-center space-x-3">
+        <a href="#extension" class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <span>🧩 Chrome Plugin</span>
+        </a>
+        <button onclick="openPricingModal()" class="px-4 py-2 text-sm font-bold rounded-xl bg-gradient-to-r from-etsy-600 to-orange-500 hover:from-etsy-500 hover:to-orange-400 text-white shadow-lg shadow-etsy-600/30 transition transform hover:-translate-y-0.5">
+          Get Pro Lifetime
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-10 px-4 sm:px-6 lg:px-8 text-center max-w-4xl mx-auto">
+    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-xs font-semibold mb-4">
+      <span>⚡ Updated with 6.5% Transaction Fee + 2026 Payment Processing Rates</span>
+    </div>
+    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white mb-4">
+      The Most Accurate <br>
+      <span class="bg-gradient-to-r from-etsy-400 via-orange-300 to-amber-400 bg-clip-text text-transparent">
+        Etsy Fee & Profit Calculator
+      </span>
+    </h1>
+    <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto mb-6">
+      Never underprice your listings again. Factor in listing fees, 6.5% transaction cut, payment processing, packaging, and Offsite Ads in real time.
+    </p>
+
+    <!-- Niche Preset Chips -->
+    <div class="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto">
+      <span class="text-xs text-slate-500 font-semibold uppercase tracking-wider mr-1">Quick Presets:</span>
+      <button onclick="applyPreset('digital-download')" class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-900 border border-slate-700 hover:border-etsy-500 text-slate-300 hover:text-white transition">
+        📄 Digital Download (90%+ Margin)
+      </button>
+      <button onclick="applyPreset('print-on-demand')" class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-900 border border-slate-700 hover:border-etsy-500 text-slate-300 hover:text-white transition">
+        👕 Print on Demand (POD)
+      </button>
+      <button onclick="applyPreset('handmade-craft')" class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-900 border border-slate-700 hover:border-etsy-500 text-slate-300 hover:text-white transition">
+        💍 Handmade & Jewelry
+      </button>
+      <button onclick="applyPreset('vintage-decor')" class="px-3 py-1.5 rounded-full text-xs font-medium bg-slate-900 border border-slate-700 hover:border-etsy-500 text-slate-300 hover:text-white transition">
+        🕰️ Vintage & Antiques
+      </button>
+    </div>
+  </section>
+
+  <!-- Main Calculator Grid -->
+  <main id="calculator" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 flex-1 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- Left Column: Input Controls -->
+      <div class="lg:col-span-6 glass-card rounded-3xl p-6 sm:p-8 shadow-xl">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+          <h2 class="text-lg font-bold text-white flex items-center space-x-2">
+            <span>⚙️</span>
+            <span>Listing & Cost Details</span>
+          </h2>
+          <div class="flex items-center space-x-2">
+            <label class="text-xs text-slate-400">Country:</label>
+            <select id="countrySelect" class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-etsy-500">
+              <option value="US">🇺🇸 United States (USD)</option>
+              <option value="UK">🇬🇧 United Kingdom (GBP)</option>
+              <option value="CA">🇨🇦 Canada (CAD)</option>
+              <option value="AU">🇦🇺 Australia (AUD)</option>
+              <option value="EU">🇪🇺 European Union (EUR)</option>
+            </select>
+          </div>
+        </div>
+
+        <form id="calcForm" class="space-y-5" onsubmit="event.preventDefault();">
+          
+          <!-- Pricing Block -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Item Sale Price</label>
+                <span class="text-xs font-mono text-etsy-400" id="itemPriceBadge">$32.00</span>
+              </div>
+              <div class="relative">
+                <span class="currency-symbol absolute left-3.5 top-2.5 text-slate-400 text-sm">$</span>
+                <input type="number" id="itemPrice" value="32.00" step="0.5" min="0" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-etsy-500 transition">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Buyer Shipping Fee</label>
+                <span class="text-xs font-mono text-slate-400" id="shippingChargeBadge">$0.00</span>
+              </div>
+              <div class="relative">
+                <span class="currency-symbol absolute left-3.5 top-2.5 text-slate-400 text-sm">$</span>
+                <input type="number" id="shippingCharge" value="0.00" step="0.5" min="0" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-etsy-500 transition">
+              </div>
+            </div>
+          </div>
+
+          <!-- Cost of Goods & Shipping Cost -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Item Cost (COGS / POD)</label>
+                <span class="text-xs font-mono text-slate-400" id="itemCostBadge">$9.50</span>
+              </div>
+              <div class="relative">
+                <span class="currency-symbol absolute left-3.5 top-2.5 text-slate-400 text-sm">$</span>
+                <input type="number" id="itemCost" value="9.50" step="0.5" min="0" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-etsy-500 transition">
+              </div>
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <label class="text-xs font-bold text-slate-300 uppercase tracking-wider">Actual Shipping Cost</label>
+                <span class="text-xs font-mono text-slate-400" id="shippingCostBadge">$4.20</span>
+              </div>
+              <div class="relative">
+                <span class="currency-symbol absolute left-3.5 top-2.5 text-slate-400 text-sm">$</span>
+                <input type="number" id="shippingCost" value="4.20" step="0.5" min="0" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-etsy-500 transition">
+              </div>
+            </div>
+          </div>
+
+          <!-- Marketing & Ads -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800/80">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                Offsite Ads Fee
+              </label>
+              <select id="offsiteAds" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-etsy-500">
+                <option value="none">None (0%) — Direct Traffic</option>
+                <option value="optional">Optional (15%) — Under $10k Sales</option>
+                <option value="mandatory">Mandatory (12%) — Over $10k Sales</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                Etsy On-Site Ads ($/sale)
+              </label>
+              <div class="relative">
+                <span class="currency-symbol absolute left-3.5 top-2.5 text-slate-400 text-sm">$</span>
+                <input type="number" id="etsyAdsCost" value="0.00" step="0.25" min="0" class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-8 pr-3 py-2 text-sm text-white font-mono focus:outline-none focus:border-etsy-500 transition">
+              </div>
+            </div>
+          </div>
+
+          <!-- Target Margin Calculator -->
+          <div class="pt-4 border-t border-slate-800/80" id="target-pricing">
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center space-x-1.5">
+                <span>🎯 Target Profit Margin Pricing</span>
+              </label>
+              <span id="targetMarginLabel" class="text-xs font-bold text-emerald-400 font-mono">40%</span>
+            </div>
+            <input type="range" id="targetMarginSlider" min="5" max="80" value="40" step="1" class="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-etsy-500">
+            
+            <div class="mt-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between text-xs">
+              <span class="text-slate-400">To achieve a <strong id="sliderMarginText" class="text-white">40%</strong> margin, price at:</span>
+              <span class="text-base font-extrabold text-emerald-400 font-mono" id="recommendedPriceDisplay">$39.85</span>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- Right Column: Live Profit & Fee Analytics Dashboard -->
+      <div class="lg:col-span-6 space-y-6">
+
+        <!-- Top Big Card: Net Profit & Margin -->
+        <div class="glass-card rounded-3xl p-7 shadow-2xl glow-orange relative border border-etsy-500/30">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Estimated Net Profit</span>
+            <span id="marginBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+              45.8% Margin
+            </span>
+          </div>
+
+          <div class="flex items-baseline space-x-3 mb-6">
+            <div class="text-5xl sm:text-6xl font-black text-emerald-400 font-mono tracking-tight" id="netProfitDisplay">
+              $14.65
+            </div>
+            <div class="text-sm font-semibold text-slate-400">
+              / item sold
+            </div>
+          </div>
+
+          <!-- Revenue vs Costs Breakdown Bar -->
+          <div class="space-y-2 mb-6">
+            <div class="flex justify-between text-xs font-mono">
+              <span class="text-emerald-400 font-semibold" id="barProfitLabel">Profit: $14.65</span>
+              <span class="text-orange-400 font-semibold" id="barFeesLabel">Etsy: $3.65</span>
+              <span class="text-slate-400 font-semibold" id="barCostsLabel">Costs: $13.70</span>
+            </div>
+            <div class="h-3 w-full bg-slate-900 rounded-full overflow-hidden flex">
+              <div id="barProfit" class="h-full bg-emerald-500 transition-all duration-300" style="width: 45%;"></div>
+              <div id="barFees" class="h-full bg-etsy-500 transition-all duration-300" style="width: 15%;"></div>
+              <div id="barCosts" class="h-full bg-slate-600 transition-all duration-300" style="width: 40%;"></div>
+            </div>
+          </div>
+
+          <!-- Quick Metrics Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-800 text-center">
+            <div class="p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+              <div class="text-[11px] text-slate-400 uppercase font-semibold">Break-Even</div>
+              <div class="text-base font-bold text-white font-mono mt-0.5" id="breakEvenDisplay">$16.85</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80">
+              <div class="text-[11px] text-slate-400 uppercase font-semibold">Total Etsy Fees</div>
+              <div class="text-base font-bold text-orange-400 font-mono mt-0.5" id="totalFeesDisplay">$3.65</div>
+            </div>
+            <div class="p-3 rounded-2xl bg-slate-900/60 border border-slate-800/80 col-span-2 sm:col-span-1">
+              <div class="text-[11px] text-slate-400 uppercase font-semibold">Return on Cost</div>
+              <div class="text-base font-bold text-emerald-400 font-mono mt-0.5" id="roiDisplay">106.9%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Detailed Itemized Fees Accordion -->
+        <div class="glass-card rounded-3xl p-6 shadow-xl space-y-3">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center space-x-2">
+              <span>🧾</span>
+              <span>Itemized Fee Breakdown</span>
+            </h3>
+            <span class="text-xs font-mono text-slate-400" id="takeRateBadge">Etsy Take Rate: 11.4%</span>
+          </div>
+
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
+              <span>Listing Fee (Per unit)</span>
+              <span class="font-mono font-semibold" id="feeListing">$0.20</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
+              <span>Transaction Fee (6.5% of total charged)</span>
+              <span class="font-mono font-semibold" id="feeTransaction">$2.08</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
+              <span>Payment Processing Fee (3% + $0.25)</span>
+              <span class="font-mono font-semibold" id="feePayment">$1.21</span>
+            </div>
+            <div class="flex justify-between py-1.5 border-b border-slate-900 text-slate-300">
+              <span>Offsite Ads Fee</span>
+              <span class="font-mono font-semibold" id="feeOffsiteAds">$0.00</span>
+            </div>
+            <div class="flex justify-between py-1.5 text-slate-300">
+              <span>Seller Costs (Materials + Shipping)</span>
+              <span class="font-mono font-semibold text-rose-400" id="feeSellerCosts">$13.70</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Chrome Extension Download Banner -->
+  <section id="extension" class="border-t border-slate-800/80 py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+    <div class="glass-card rounded-3xl p-8 sm:p-12 border border-etsy-500/30 flex flex-col md:flex-row items-center justify-between gap-8 glow-orange">
+      <div class="space-y-4 max-w-xl text-center md:text-left">
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-etsy-500/20 text-etsy-400 border border-etsy-500/30 uppercase tracking-wider">
+          Chrome Extension
+        </span>
+        <h2 class="text-3xl font-extrabold text-white">
+          Calculate Profit on Any Etsy Listing in 1 Click
+        </h2>
+        <p class="text-slate-400 text-sm">
+          Browse Etsy.com and see net margins, fees, and competitor pricing reverse-engineered directly on the product page.
+        </p>
+        <div class="flex flex-wrap gap-3 justify-center md:justify-start pt-2">
+          <a href="/extension/manifest.json" target="_blank" class="px-5 py-3 rounded-xl font-bold text-sm bg-etsy-600 hover:bg-etsy-500 text-white shadow-lg shadow-etsy-600/30 transition flex items-center space-x-2">
+            <span>🧩</span>
+            <span>View Extension Package</span>
+          </a>
+          <button onclick="alert('How to install:\n1. Open chrome://extensions in your browser\n2. Toggle Developer Mode ON\n3. Click \'Load unpacked\' and select /home/ai/etsy-calc/extension\n\nDone! The extension is ready to use.')" class="px-5 py-3 rounded-xl font-bold text-sm bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+            📖 3-Step Install Guide
+          </button>
+        </div>
+      </div>
+
+      <div class="w-full max-w-xs p-5 rounded-2xl bg-slate-900 border border-slate-700 text-center font-mono text-xs text-slate-300 space-y-2">
+        <div class="text-etsy-400 font-bold mb-2">🛍️ Live on Etsy.com:</div>
+        <div class="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between">
+          <span>Competitor Price:</span>
+          <span class="text-white font-bold">$34.99</span>
+        </div>
+        <div class="p-2 rounded bg-slate-950 border border-slate-800 flex justify-between text-orange-400">
+          <span>Etsy Take:</span>
+          <span>-$4.02</span>
+        </div>
+        <div class="p-2 rounded bg-emerald-500/10 border border-emerald-500/20 flex justify-between text-emerald-400 font-bold">
+          <span>Est. Net Profit:</span>
+          <span>$18.45 (52%)</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Modal (Monetization) -->
+  <div id="pricingModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="glass-card rounded-3xl max-w-xl w-full p-8 border border-etsy-500/40 shadow-2xl relative">
+      <button onclick="closePricingModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white text-xl">✕</button>
+      
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full text-xs font-bold bg-etsy-500/20 text-etsy-400 border border-etsy-500/30 uppercase tracking-wider">
+          Pro Upgrade
+        </span>
+        <h3 class="text-2xl font-bold text-white mt-3">EtsyProfit Pro Lifetime</h3>
+        <p class="text-slate-400 text-sm mt-1">Scale your Etsy store with bulk listing calculations and automated margin alerts.</p>
+      </div>
+
+      <div class="space-y-3.5 mb-8 text-sm text-slate-200">
+        <div class="flex items-center space-x-3">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span><strong>Bulk CSV Margin Calculator:</strong> Upload 500+ listings at once</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span><strong>Offsite Ads Breakeven Matrix:</strong> Know exactly if 15% ads are profitable</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span><strong>Competitor Price Scraper:</strong> Reverse-engineer top competitors' fees</span>
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span><strong>Multi-Currency Live FX:</strong> Instant conversion between USD, GBP, EUR, CAD, AUD</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <div class="p-4 rounded-2xl bg-slate-900 border border-slate-700 text-center">
+          <div class="text-xs text-slate-400 uppercase font-semibold">Monthly</div>
+          <div class="text-2xl font-extrabold text-white mt-1">$9.99<span class="text-xs text-slate-400 font-normal">/mo</span></div>
+          <button onclick="startCheckout('monthly')" class="mt-3 w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition">
+            Choose Monthly
+          </button>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-gradient-to-b from-orange-950/40 to-slate-900 border-2 border-etsy-500 text-center relative shadow-lg shadow-etsy-500/10">
+          <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 px-2 py-0.5 rounded-full bg-etsy-500 text-[10px] font-bold text-white uppercase">
+            Best Value
+          </div>
+          <div class="text-xs text-etsy-300 uppercase font-semibold">Lifetime Deal</div>
+          <div class="text-2xl font-extrabold text-white mt-1">$39<span class="text-xs text-slate-400 font-normal"> once</span></div>
+          <button onclick="startCheckout('lifetime')" class="mt-3 w-full py-2 rounded-xl bg-etsy-600 hover:bg-etsy-500 text-xs font-bold text-white transition shadow-md shadow-etsy-500/20">
+            Get Lifetime Deal
+          </button>
+        </div>
+      </div>
+
+      <div class="text-center text-xs text-slate-500">
+        30-day money back guarantee • Instant digital activation
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/60 py-8 px-4 text-center text-xs text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        © 2026 EtsyProfit Pro. Not affiliated with Etsy, Inc. All trademarks belong to their respective owners.
+      </div>
+      <div class="flex space-x-6">
+        <a href="#calculator" class="hover:text-slate-400">Fee Calculator</a>
+        <a href="#target-pricing" class="hover:text-slate-400">Target Pricing</a>
+        <a href="#extension" class="hover:text-slate-400">Chrome Plugin</a>
+        <a href="#" onclick="openPricingModal(); return false;" class="text-etsy-400 hover:underline">Activate License</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

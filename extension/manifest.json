@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "EtsyProfit Pro — Live Fee & Profit Calculator",
+  "version": "1.0.0",
+  "description": "Calculate exact Etsy fees, net profit margin, and break-even price directly on Etsy listing pages.",
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.etsy.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "EtsyProfit Pro Calculator"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.etsy.com/listing/*", "*://*.etsy.com/*/listing/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "etsy-profit-pro",
+  "version": "1.0.0",
+  "description": "Etsy Fee & Profit Margin Calculator — Calculate Net Profit, Break-Even & Recommended Retail Price",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
+  }
+}
